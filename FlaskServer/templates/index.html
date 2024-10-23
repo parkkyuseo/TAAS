@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Main Page</h1>
+    name : {{user}}
+    level : {{data.level}}
+    point : {{data.point}}
+    exp : {{data.exp}}
+    <form action="/" method="post">
+        next userName : <input type="text" name="user">
+        <input type="submit" value="전송하기">
+    </form>
+</body>
+</html>
