@@ -20,8 +20,8 @@ This is a **TA Application System** built using **Flask** (backend) and **React*
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-repo/ta-application-system.git
-cd ta-application-system
+git clone https://github.com/parkkyuseo/TAAS.git
+cd TAAS
 ```
 
 ### 2. Set Up the Backend (Flask)
@@ -39,7 +39,7 @@ Make sure you're in the project root directory where `app.py` is located.
    ```
 
 ### 3. Set Up the Frontend (React)
-Move to the `client` directory (or wherever your React frontend is located):
+Move to the `client` directory :
 
 ```bash
 cd client
