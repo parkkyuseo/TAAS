@@ -1,0 +1,91 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* General container styling */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading styles */
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #555;
+}
+
+h3 {
+    font-size: 1.2rem;
+    color: #777;
+}
+
+/* Input field styling */
+input[type="text"]:not(.login-ID){
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Button styling */
+button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px 5px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Link button styling */
+a {
+    text-decoration: none;
+}
+
+.progressbar {
+    margin: 5px 0;
+}
+
+/* Progress percentage */
+.progressbar div {
+    transition: width 0.3s ease;
+}
+
+/* Progress text styling */
+div[style*="Progress"] {
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+    margin-top: 10px;
+}
