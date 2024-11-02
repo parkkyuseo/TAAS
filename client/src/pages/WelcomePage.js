@@ -16,7 +16,7 @@ function WelcomePage() {
                 <h2 className="block-subheading">Please login to continue</h2>
                 <h3 className="block-description">See Canvas for login information</h3>
                 <Link to="/login">
-                    <button className="login-button">Login</button>
+                    <button className="login-button">continue</button>
                 </Link>
             </section>
 

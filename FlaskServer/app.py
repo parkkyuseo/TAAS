@@ -2,6 +2,9 @@
 from flask import Flask, jsonify, render_template, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
+import json
+import os
+from datetime import datetime
 
 # Create an instance of the Flask object
 app = Flask(__name__)
@@ -28,6 +31,30 @@ users_data = [
     {"id": "student", "password": "student-thisismypassword"},
     {"id": "student2", "password": "student-thisismypassword"}
 ]
+
+# Initial empty structure for application data
+empty_application_data = {
+    "status": "Not Started",  # Will be set to "Not Started", "Incomplete", or "Complete"
+    "last_edited": "",
+    "addmited_semester": "",
+    "college_status": "",
+    "gpa": None,
+    "ufid": "",
+    "country_of_origin": "",
+    "test_scores": {
+        "speak_toefl": "n/a"  # Options: n/a, Under 45 Speak / 23 Toefl IBT, 45-50 Speak / 23-27 Toefl IBT, 55-60 Speak / 28-30 Toefl IBT
+    },
+    "eap_status": {
+        "eap_5836_status": "",  # Ph.D. only, may be empty if not applicable
+        "eap_5837_status": ""   # Ph.D. only
+    },
+    "research_and_teaching_interests": "",
+    "travel_plan": "n/a",
+    "course_preferences": [
+        # List of course preferences; max 5 courses
+        # Example: {"course": "Algorithms", "preference_level": "Highly preferred"}
+    ]
+}
 
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -71,6 +98,53 @@ def protected():
     """
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+
+def save_empty_application_data(user_id):
+    filename = f"{user_id}_application.json"
+    with open(filename, "w") as file:
+        json.dump(empty_application_data, file, indent=4)
+
+def save_application_data(user_id, data):
+    filename = f"{user_id}_application.json"
+    with open(filename, "w") as file:
+        json.dump(data, file, indent=4)  # Save data in JSON format with indentation for readability
+
+# Function to load data if it exists or return empty data
+def load_application_data(user_id):
+    filename = f"{user_id}_application.json"
+    if os.path.exists(filename):
+        with open(filename, "r") as file:
+            return json.load(file)
+    return empty_application_data  # Return empty data if file doesn't exist
+
+# handle application data
+@app.route('/application', methods=['GET', 'POST'])
+def application():
+    if request.method == 'GET':
+        # Retrieve user_id from query parameters for GET requests
+        user_id = request.args.get("user_id")
+        print("Received user_id in GET request:", user_id)  
+
+        if not user_id:
+            return jsonify({"error": "User ID is missing"}), 400  # Return 400 if user_id is not provided
+
+        data = load_application_data(user_id)
+        return jsonify(data), 200
+
+    elif request.method == 'POST':
+        # Retrieve user_id and application_data from JSON body for POST requests
+        user_id = request.json.get("user_id")
+        print("Received user_id in POST request:", user_id)
+
+        if not user_id:
+            return jsonify({"error": "User ID is missing"}), 400
+
+        data = request.json.get("application_data")
+        save_application_data(user_id, data)
+        return jsonify({"message": "Application data saved successfully"}), 200
+
+
 
 if __name__=="__main__":
     app.run(debug=True)

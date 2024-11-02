@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import '../styles/login.css';
@@ -10,6 +10,8 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [token, setToken] = useState(null);
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // Function to handle login and fetch JWT token
   const handleLogin = async () => {
@@ -26,8 +28,14 @@ function LoginPage() {
     if (response.ok) {
       setToken(data.access_token);  // Store the JWT token if login is successful
       setMessage("Logged in successfully");
+      // Store user_id and token in localStorage after login
+      localStorage.setItem("user_id", id); 
+      localStorage.setItem("token", data.access_token);
+      navigate("/application-homepage"); 
     } else {
-      setMessage("Login failed: " + data.error);
+      setToken(null);
+      setMessage("");
+      setError("Incorrect Password or ID");
     }
   };
 
@@ -51,9 +59,10 @@ function LoginPage() {
         <input type="text" className="login-ID" placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} />
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         
-        <Link to="/application">
-          <button onClick={handleLogin}>Login</button>
-        </Link>
+        <button onClick={handleLogin}>Login</button>
+       
+       
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         
         {token && (
           <div>

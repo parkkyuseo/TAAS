@@ -1,30 +1,78 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import '../styles/application.css';
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import { ApplicationContext } from '../context/ApplicationContext';
 
 function ApplicationPage() {
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [ID, setID] = useState("");
+  const {
+    admittedSemester,
+    setAdmittedSemester,
+    collegeStatus,
+    setCollegeStatus,
+    gpa,
+    setGpa,
+    ufid,
+    setUfid
+  } = useContext(ApplicationContext);
 
   return (
     <div>
       <Header subtitle="Application Homepage (student)" />  {/* Header component included here */}
       <h1>TA Application Form</h1>
       {/* contents of the application */}
-      <form>
-        <div>Name</div>
-        <input type = "text" value = {name} onChange={(e) => setName(e.target.value)}/>
-        <p></p>
-        <div>Email</div>
-        <input type = "text" value = {email} onChange={(e) => setEmail(e.target.value)}/>
-        <p></p>
-        <div>UF-ID</div>
-        <input type = "text" value = {ID} onChange={(e) => setID(e.target.value)}/>
-        <p></p>
+      <form className="application-form">
+      <div>
+        <label htmlFor="admittedSemester">Admitted Semester</label>
+        <input
+          type="text"
+          id="admittedSemester"
+          value={admittedSemester}
+          onChange={(e) => setAdmittedSemester(e.target.value)}
+        />
+      </div>
+      <p></p>
+      
+      <div>
+        <label htmlFor="collegeStatus">College Status</label>
+        <select
+          id="collegeStatus"
+          value={collegeStatus}
+          onChange={(e) => setCollegeStatus(e.target.value)}
+        >
+          <option value="" disabled>Select your college status</option>
+          <option value="Graduate Masters">Graduate Masters</option>
+          <option value="Graduate Ph.D.">Graduate Ph.D.</option>
+          <option value="Undergraduate Junior">Undergraduate Junior</option>
+          <option value="Undergraduate Senior">Undergraduate Senior</option>
+          <option value="Undergraduate Sophomore">Undergraduate Sophomore</option>
+        </select>
+      </div>
+      <p></p>
+      
+      <div>
+        <label htmlFor="gpa">GPA</label>
+        <input
+          type="text"
+          id="gpa"
+          value={gpa}
+          onChange={(e) => setGpa(e.target.value)}
+        />
+      </div>
+      <p></p>
+      
+      <div>
+        <label htmlFor="ufid">UFID</label>
+        <input
+          type="text"
+          id="ufid"
+          value={ufid}
+          onChange={(e) => setUfid(e.target.value)}
+        />
+      </div>
+      <p></p>
+
 
       <Link to="/application2">
         <button>Next</button>  {/* Button to navigate to the next application page */}
@@ -32,15 +80,6 @@ function ApplicationPage() {
       <p></p>
 
       <h3> Progress </h3>
-
-      {/* <div className = "progresstop">
-            <div style= {{
-              height: "5px",
-              width: "9%",
-              backgroundColor: "#000000"
-            }}> </div>
-            </div> */}
-        
           <div className = "progressbar">
             <div style= {{
               height: "30px",
@@ -48,16 +87,6 @@ function ApplicationPage() {
               backgroundColor: "#2ecc71"
             }}> </div>
             </div>
-
-            {/* <div className = "progressbottom">
-            <div style= {{
-              height: "5px",
-              width: "9%",
-              backgroundColor: "#000000"
-            }}> </div>
-            </div> */}
-        
-          
         
         <div> 0% </div>
       

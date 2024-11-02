@@ -37,27 +37,34 @@
 
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link} from "react-router-dom";
+import { ApplicationProvider } from './context/ApplicationContext';
 import WelcomePage from './pages/WelcomePage'; 
 import LoginPage from './pages/LoginPage'; 
+import ApplicationHomepage from './pages/ApplicationHomepage';
 import ApplicationPage from './pages/ApplicationPage'
 import ApplicationPage2 from './pages/ApplicationPage2'
 import ApplicationPage3 from './pages/ApplicationPage3'
+import ApplicationPage4 from './pages/ApplicationPage4'
 import SubmissionPage from './pages/SubmissionPage'
 
 
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />  {/* Default welcome page */}
-        <Route path="/login" element={<LoginPage />} />  {/* Login page */}
-        <Route path="/application" element={<ApplicationPage />} />  {/* Application page */}
-        <Route path="/application2" element={<ApplicationPage2 />} />  {/* Application page 2 */}
-        <Route path="/application3" element={<ApplicationPage3 />} />  {/* Application page 3 */}
-        <Route path="submission" element={<SubmissionPage />} />  {/* Submission page */}
-      </Routes>
-    </Router>
+    <ApplicationProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />  {/* Default welcome page */}
+          <Route path="/login" element={<LoginPage />} />  {/* Login page */}
+          <Route path="/application-homepage" element={<ApplicationHomepage />} />  {/* Application Homepage */}
+          <Route path="/application" element={<ApplicationPage />} />  {/* Application page */}
+          <Route path="/application2" element={<ApplicationPage2 />} />  {/* Application page 2 */}
+          <Route path="/application3" element={<ApplicationPage3 />} />  {/* Application page 3 */}
+          <Route path="/application4" element={<ApplicationPage4 />} />  {/* Application page 4 */}
+          <Route path="submission" element={<SubmissionPage />} />  {/* Submission page */}
+        </Routes>
+      </Router>
+    </ApplicationProvider>
   );
 }
 
