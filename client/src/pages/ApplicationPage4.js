@@ -36,7 +36,7 @@ function ApplicationPage4() {
         <input type = "text" value = {course5} onChange={(e) => setCourse5(e.target.value)}/>
         <p></p>
 
-      <Link to="/application2">
+      <Link to="/application3">
         <button>Previous</button>  {/* Button to navigate to the previous application page */}
       </Link>
 

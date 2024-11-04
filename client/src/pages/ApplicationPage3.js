@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import '../styles/application.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -10,8 +10,48 @@ function ApplicationPage3() {
     researchAndTeachingInterests,
     setResearchAndTeachingInterests,
     travelPlan,
-    setTravelPlan
+    setTravelPlan,
+    loadApplicationData
   } = useContext(ApplicationContext); 
+
+  const navigate = useNavigate();
+
+  // Load data 
+  useEffect(() => {
+    const user_id = localStorage.getItem("user_id");
+    if (user_id) {
+      loadApplicationData(user_id);
+    }
+  }, []);  
+
+  // Function to handle saving the data when clicking the "Next" button
+  const handleNext = async () => {
+    const user_id = localStorage.getItem("user_id");
+    const applicationData = {
+      research_and_teaching_interests: researchAndTeachingInterests,
+      travel_plan: travelPlan,
+      last_page: "application4"
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, application_data: applicationData }),
+      });
+
+      if (response.ok) {
+        console.log("Data saved successfully");
+        navigate("/application4");
+      } else {
+        console.error("Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error occurred while saving data:", error);
+    }
+  };
 
   return (
     <div>
@@ -43,12 +83,10 @@ function ApplicationPage3() {
         <p></p>
 
         <Link to="/application2">
-          <button>Previous</button>  {/* Button to navigate to the previous application page */}
+          <button type="button">Previous</button> {/* Button to navigate to the previous application page */}
         </Link>
         
-        <Link to="/application4">
-          <button>Next</button>  {/* Button to navigate to the next application page */}
-        </Link>
+        <button type="button" onClick={handleNext}>Next</button> {/* Save and navigate to the next page */}
 
         <h3> Progress </h3>
         <div className="progressbar">

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import '../styles/application.css';
 import Header from '../components/Header'
@@ -14,19 +14,29 @@ function ApplicationPage() {
     gpa,
     setGpa,
     ufid,
-    setUfid
+    setUfid,
+    loadApplicationData
   } = useContext(ApplicationContext);
   const navigate = useNavigate();
+  const user_id = localStorage.getItem("user_id");
 
+    // Load data 
+    useEffect(() => {
+      const user_id = localStorage.getItem("user_id");
+      if (user_id) {
+        loadApplicationData(user_id);
+      }
+    }, []);
 
   // Function to handle saving the data when clicking the "Next" button
   const handleNext = async () => {
-    const user_id = localStorage.getItem("user_id");
+    
     const applicationData = {
       admitted_semester: admittedSemester, 
       college_status: collegeStatus,        
       gpa,
       ufid,
+      last_page: "application2"
     };
 
     try {

@@ -1,6 +1,6 @@
 // src/pages/ApplicationHomepage.js
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/applicationHomepage.css';
@@ -26,6 +26,8 @@ function ApplicationHomepage() {
   const [applicationData, setApplicationData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const user_id = localStorage.getItem("user_id");
   console.log("Retrieved user_id:", user_id); // Check if user_id is available
@@ -60,6 +62,15 @@ function ApplicationHomepage() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
+  const handleContinueApplication = () => {
+    if (applicationData?.last_page) {
+      navigate(`/${applicationData.last_page}`);  // Redirect to the last page stored in the data
+    } else {
+      navigate('/application');  // Fallback to the first application page
+    }
+  };
+
+
   return (
     <div className="application-homepage">
       <Header subtitle="Application Homepage" />
@@ -81,7 +92,9 @@ function ApplicationHomepage() {
 
         {applicationData.status === "Incomplete" && (
           <div>
-            <button className="continue-button">Continue Application</button>
+            <button className="continue-button" onClick={handleContinueApplication}>
+              Continue Application
+            </button>
             <button className="withdraw-button">Withdraw Application</button>
           </div>
         )}

@@ -56,7 +56,8 @@ empty_application_data = {
     "course_preferences": [
         # List of course preferences; max 5 courses
         # Example: {"course": "Algorithms", "preference_level": "Highly preferred"}
-    ]
+    ],
+    "last_page": ""
 }
 
 @app.route('/users', methods=['GET'])
@@ -125,6 +126,7 @@ def load_application_data(user_id):
         return empty_application_data  # Return empty data if the file doesn't exist
 
 # handle application data
+# Handle application data
 @app.route('/application', methods=['GET', 'POST'])
 def application():
     if request.method == 'GET':
@@ -146,8 +148,23 @@ def application():
         if not user_id:
             return jsonify({"error": "User ID is missing"}), 400
 
-        data = request.json.get("application_data")
-        save_application_data(user_id, data)
+        new_data = request.json.get("application_data")
+        if not new_data:
+            return jsonify({"error": "Application data is missing"}), 400
+
+        # Load existing data
+        existing_data = load_application_data(user_id)
+
+        # Merge new data with existing data
+        merged_data = {**existing_data, **new_data}
+
+        # Update the status and last edited date
+        merged_data["status"] = "Incomplete"
+        formatted_date = datetime.now().strftime("%b. %-d, %Y")
+        merged_data["last_edited"] = formatted_date
+
+        # Save the merged data
+        save_application_data(user_id, merged_data)
         return jsonify({"message": "Application data saved successfully"}), 200
 
 
