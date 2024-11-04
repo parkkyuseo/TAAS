@@ -1,0 +1,19 @@
+{
+    "status": "Not Started",
+    "last_edited": "",
+    "admitted_semester": "Fall 2024",
+    "college_status": "Graduate Masters",
+    "gpa": "3.0",
+    "ufid": "12345567",
+    "country_of_origin": "",
+    "test_scores": {
+        "speak_toefl": "n/a"
+    },
+    "eap_status": {
+        "eap_5836_status": "",
+        "eap_5837_status": ""
+    },
+    "research_and_teaching_interests": "",
+    "travel_plan": "n/a",
+    "course_preferences": []
+}

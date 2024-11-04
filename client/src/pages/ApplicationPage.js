@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../styles/application.css';
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -16,10 +16,41 @@ function ApplicationPage() {
     ufid,
     setUfid
   } = useContext(ApplicationContext);
+  const navigate = useNavigate();
+
+
+  // Function to handle saving the data when clicking the "Next" button
+  const handleNext = async () => {
+    const user_id = localStorage.getItem("user_id");
+    const applicationData = {
+      admitted_semester: admittedSemester, 
+      college_status: collegeStatus,        
+      gpa,
+      ufid,
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, application_data: applicationData }), 
+      });
+
+      if (response.ok) {
+        console.log("Data saved successfully");
+        navigate("/application2");
+        console.error("Failed to save data");
+      }
+    } catch (error) {
+      console.error("Error occurred while saving data:", error);
+    }
+  };
 
   return (
     <div>
-      <Header subtitle="Application Homepage (student)" />  {/* Header component included here */}
+      <Header subtitle="Application" />  {/* Header component included here */}
       <h1>TA Application Form</h1>
       {/* contents of the application */}
       <form className="application-form">
@@ -74,9 +105,7 @@ function ApplicationPage() {
       <p></p>
 
 
-      <Link to="/application2">
-        <button>Next</button>  {/* Button to navigate to the next application page */}
-      </Link>
+      <button type="button" onClick={handleNext}>Next</button>
       <p></p>
 
       <h3> Progress </h3>

@@ -15,7 +15,7 @@ function ApplicationPage4() {
 
   return (
     <div>
-      <Header subtitle="Application Homepage" />  {/* Header component included here */}
+      <Header subtitle="Application" />  {/* Header component included here */}
       <h1>TA Application Form</h1>
       <h2>Course Preferences (Up to 5)</h2>
       {/* contents of the application */}

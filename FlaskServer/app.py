@@ -32,11 +32,14 @@ users_data = [
     {"id": "student2", "password": "student-thisismypassword"}
 ]
 
+subfolder_path = 'application_data'  # Subfolder to store user data
+os.makedirs(subfolder_path, exist_ok=True)
+
 # Initial empty structure for application data
 empty_application_data = {
     "status": "Not Started",  # Will be set to "Not Started", "Incomplete", or "Complete"
     "last_edited": "",
-    "addmited_semester": "",
+    "admitted_semester": "",
     "college_status": "",
     "gpa": None,
     "ufid": "",
@@ -101,22 +104,25 @@ def protected():
 
 
 def save_empty_application_data(user_id):
-    filename = f"{user_id}_application.json"
-    with open(filename, "w") as file:
+    filepath = os.path.join(subfolder_path, f"{user_id}_application.json")
+    with open(filepath, "w") as file:
         json.dump(empty_application_data, file, indent=4)
 
 def save_application_data(user_id, data):
-    filename = f"{user_id}_application.json"
-    with open(filename, "w") as file:
-        json.dump(data, file, indent=4)  # Save data in JSON format with indentation for readability
+    formatted_data = empty_application_data.copy()
+    formatted_data.update(data)
+    print(formatted_data)
+    filepath = os.path.join(subfolder_path, f"{user_id}_application.json")
+    with open(filepath, 'w') as file:
+        json.dump(formatted_data, file, indent=4)
 
-# Function to load data if it exists or return empty data
 def load_application_data(user_id):
-    filename = f"{user_id}_application.json"
-    if os.path.exists(filename):
-        with open(filename, "r") as file:
+    filepath = os.path.join(subfolder_path, f"{user_id}_application.json")
+    try:
+        with open(filepath, 'r') as file:
             return json.load(file)
-    return empty_application_data  # Return empty data if file doesn't exist
+    except FileNotFoundError:
+        return empty_application_data  # Return empty data if the file doesn't exist
 
 # handle application data
 @app.route('/application', methods=['GET', 'POST'])
@@ -124,7 +130,7 @@ def application():
     if request.method == 'GET':
         # Retrieve user_id from query parameters for GET requests
         user_id = request.args.get("user_id")
-        print("Received user_id in GET request:", user_id)  
+        print("Received user_id in GET request in application GET:", user_id)  
 
         if not user_id:
             return jsonify({"error": "User ID is missing"}), 400  # Return 400 if user_id is not provided
@@ -135,7 +141,7 @@ def application():
     elif request.method == 'POST':
         # Retrieve user_id and application_data from JSON body for POST requests
         user_id = request.json.get("user_id")
-        print("Received user_id in POST request:", user_id)
+        print("Received user_id in POST request in application POST:", user_id)
 
         if not user_id:
             return jsonify({"error": "User ID is missing"}), 400

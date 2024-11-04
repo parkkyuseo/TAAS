@@ -23,7 +23,7 @@ function ApplicationPage2() {
 
   return (
   <div>
-    <Header subtitle="Application Homepage" />  {/* Header component included here */}
+    <Header subtitle="Application" />  {/* Header component included here */}
     <h1>TA Application Form</h1>
     {/* contents of the application */}
     <form className="application-form">

@@ -15,7 +15,7 @@ function ApplicationPage3() {
 
   return (
     <div>
-      <Header subtitle="Application Homepage" />
+      <Header subtitle="Application" />
       <h1>TA Application Form</h1>
       <form className="application-form">
         <div>
