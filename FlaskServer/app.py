@@ -159,7 +159,7 @@ def application():
 
         # Update the status and last edited date
         merged_data["status"] = "Incomplete"
-        formatted_date = datetime.now().strftime("%b. %-d, %Y")
+        formatted_date = datetime.now().strftime("%b. %d, %Y").replace(" 0", " ")
         merged_data["last_edited"] = formatted_date
 
         # Save the merged data
@@ -190,7 +190,7 @@ def application_submit():
 
     # Set the status to "Complete" and update the last edited date
     final_data["status"] = "Complete"
-    formatted_date = datetime.now().strftime("%b. %-d, %Y")
+    formatted_date = datetime.now().strftime("%b. %d, %Y").replace(" 0", " ")
     final_data["last_edited"] = formatted_date
 
     # Save the final application data
