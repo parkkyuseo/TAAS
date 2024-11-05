@@ -1,6 +1,6 @@
 {
-    "status": "Incomplete",
-    "last_edited": "Nov. 4, 2024",
+    "status": "Complete",
+    "last_edited": "Nov. 5, 2024",
     "admitted_semester": "Fall 2024",
     "college_status": "Graduate Masters",
     "gpa": "3.0",
@@ -15,6 +15,27 @@
     },
     "research_and_teaching_interests": "describe",
     "travel_plan": "No plan",
-    "course_preferences": [],
+    "course_preferences": [
+        {
+            "course": "CAP 4773",
+            "preference": "Highly Preferred"
+        },
+        {
+            "course": "CEN 3031",
+            "preference": "Highly Preferred"
+        },
+        {
+            "course": "COP 3275",
+            "preference": "Highly Preferred"
+        },
+        {
+            "course": "CEN 3913",
+            "preference": "Highly Preferred"
+        },
+        {
+            "course": "CGS 3065",
+            "preference": "Highly Preferred"
+        }
+    ],
     "last_page": "application4"
 }

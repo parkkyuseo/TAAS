@@ -100,7 +100,12 @@ function ApplicationHomepage() {
         )}
 
         {applicationData.status === "Complete" && (
-          <button className="withdraw-button">Withdraw Application</button>
+          <div>
+            <button className="view-button" onClick={() => navigate("/application")}>
+              View Application
+            </button>
+            <button className="withdraw-button">Withdraw Application</button>
+          </div>
         )}
       </main>
 

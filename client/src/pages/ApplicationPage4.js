@@ -1,65 +1,167 @@
-
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import Select from "react-select";
+import { Link, useNavigate } from "react-router-dom";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { ApplicationContext } from "../context/ApplicationContext";
 import '../styles/application.css';
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import courseListData from "../data/courses.json";
 
 function ApplicationPage4() {
+  const { selectedCourses, setSelectedCourses, loadApplicationData } = useContext(ApplicationContext);
+  const maxCourses = 5; // Maximum number of courses to select
 
-  const [course1, setCourse1] = useState("");
-  const [course2, setCourse2] = useState("");
-  const [course3, setCourse3] = useState("");
-  const [course4, setCourse4] = useState("");
-  const [course5, setCourse5] = useState("");
+  const courseList = courseListData || [];
+
+  const navigate = useNavigate();
+
+  // Load data 
+  useEffect(() => {
+    const user_id = localStorage.getItem("user_id");
+    if (user_id) {
+      loadApplicationData(user_id);
+    }
+  }, []);  
+  
+
+  // Format courses for react-select
+  const courseOptions = courseList.map(course => ({
+    value: course.code,
+    label: `${course.code} | ${course.title}`,
+  }));
+
+  // Handle course selection changes
+  const handleCourseChange = (selectedOptions) => {
+    setSelectedCourses(selectedOptions.map(option => ({
+      course: option.value,
+      preference: "Highly Preferred",
+    })));
+  };
+
+  // Handle preference change for individual courses
+  const handlePreferenceChange = (courseCode, preference) => {
+    setSelectedCourses(prevCourses =>
+      prevCourses.map(course =>
+        course.course === courseCode ? { ...course, preference } : course
+      )
+    );
+  };
+  // Function to handle saving course preferences
+  const handleSave = async () => {
+    const user_id = localStorage.getItem("user_id");
+    const applicationData = {
+      course_preferences: selectedCourses
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, application_data: applicationData })
+      });
+
+      if (response.ok) {
+        console.log("Course preferences saved successfully");
+      } else {
+        console.error("Failed to save course preferences");
+      }
+    } catch (error) {
+      console.error("Error occurred while saving data:", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const user_id = localStorage.getItem("user_id");
+    const applicationData = {
+      course_preferences: selectedCourses,
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/application_submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, application_data: applicationData })
+      });
+
+      if (response.ok) {
+        console.log("Application submitted successfully");
+        navigate("/application-homepage");  // Redirect to the Application Homepage
+      } else {
+        console.error("Failed to submit application");
+      }
+    } catch (error) {
+      console.error("Error occurred during submission:", error);
+    }
+  };
 
   return (
     <div>
-      <Header subtitle="Application" />  {/* Header component included here */}
+      <Header subtitle="Application" />
       <h1>TA Application Form</h1>
-      <h2>Course Preferences (Up to 5)</h2>
-      {/* contents of the application */}
-    <form>
-        <div>Course 1</div>
-        <input type = "text" value = {course1} onChange={(e) => setCourse1(e.target.value)}/>
-        <p></p>
-        <div>Course 2</div>
-        <input type = "text" value = {course2} onChange={(e) => setCourse2(e.target.value)}/>
-        <p></p>
-        <div>Course 3</div>
-        <input type = "text" value = {course3} onChange={(e) => setCourse3(e.target.value)}/>
-        <p></p>
-        <div>Course 4</div>
-        <input type = "text" value = {course4} onChange={(e) => setCourse4(e.target.value)}/>
-        <p></p>
-        <div>Course 5</div>
-        <input type = "text" value = {course5} onChange={(e) => setCourse5(e.target.value)}/>
-        <p></p>
-
-      <Link to="/application3">
-        <button>Previous</button>  {/* Button to navigate to the previous application page */}
-      </Link>
-
-      <Link to="/submission">
-        <button>Submit</button>  {/* Button to navigate to the submission page */}
-      </Link>
-
-      <h3> Progress </h3>
+      
+      <form className="application-form">
+        <h2>Select up to 5 Courses</h2>
         
-          <div className = "progressbar">
-            <div style= {{
-              height: "30px",
-              width: "70%",
-              backgroundColor: "#2ecc71"
-            }}> </div>
-            </div>
+        {/* React-Select dropdown for course selection */}
+        <Select
+          isMulti
+          options={courseOptions}
+          value={selectedCourses.map(course => ({
+            value: course.course,
+            label: courseOptions.find(option => option.value === course.course)?.label,
+          }))}
+          onChange={handleCourseChange}
+          isOptionDisabled={() => selectedCourses.length >= maxCourses}
+          placeholder="Search and select courses"
+        />
 
-        <div> 70% </div>
+        {/* Preference dropdown for each selected course */}
+        {selectedCourses.map(course => (
+          <div key={course.course} style={{ marginTop: "10px" }}>
+            <label>{course.course} Preference:</label>
+            <select
+              value={course.preference}
+              onChange={(e) => handlePreferenceChange(course.course, e.target.value)}
+            >
+              <option value="Highly Preferred">Highly Preferred</option>
+              <option value="Somewhat Preferred">Somewhat Preferred</option>
+              <option value="Neither Preferred nor Undesired">Neither Preferred nor Undesired</option>
+              <option value="Undesired but Acceptable">Undesired but Acceptable</option>
+            </select>
+          </div>
+        ))}
+
+        <div className="button-group">
+          <Link to="/application3">
+            <button>Previous</button> {/* Link to previous page */}
+          </Link>
+          
+
+          <button type="button" onClick={handleSave}>Save</button>
+          
+
+          <button type="button" onClick={handleSubmit}>Submit</button>
+          
+        </div>
+
+        <h3>Progress</h3>
+        <div className="progressbar">
+          <div style={{
+            height: "30px",
+            width: "90%", // 90% progress for fourth page
+            backgroundColor: "#2ecc71"
+          }}> </div>
+        </div>
+        <div>90%</div>
       </form>
-      <Footer />  {/* Footer component included here */}
-  </div>
+      
+      <Footer />
+    </div>
   );
 }
-
 
 export default ApplicationPage4;

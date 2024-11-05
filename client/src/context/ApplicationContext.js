@@ -14,6 +14,9 @@ export function ApplicationProvider({ children }) {
   const [researchAndTeachingInterests, setResearchAndTeachingInterests] = useState("");
   const [travelPlan, setTravelPlan] = useState("");
   const [lastPage, setLastPage] = useState("application"); // Set default page for navigation
+  
+  // Add selectedCourses state here
+  const [selectedCourses, setSelectedCourses] = useState([]); // Initialize as an empty array
 
   // Function to load application data from the backend and populate context
   const loadApplicationData = async (user_id) => {
@@ -31,6 +34,7 @@ export function ApplicationProvider({ children }) {
         setEap5837Status(data.eap_status?.eap_5837_status || "");
         setResearchAndTeachingInterests(data.research_and_teaching_interests || "");
         setTravelPlan(data.travel_plan || "n/a");
+        setSelectedCourses(data.course_preferences || []); // Load course preferences from backend if available
       }
     } catch (error) {
       console.error("Failed to load application data:", error);
@@ -49,8 +53,9 @@ export function ApplicationProvider({ children }) {
       eap5837Status, setEap5837Status,
       researchAndTeachingInterests, setResearchAndTeachingInterests,
       travelPlan, setTravelPlan,
-      lastPage, setLastPage, 
-      loadApplicationData 
+      lastPage, setLastPage,
+      selectedCourses, setSelectedCourses, // Added selectedCourses state here
+      loadApplicationData
     }}>
       {children}
     </ApplicationContext.Provider>

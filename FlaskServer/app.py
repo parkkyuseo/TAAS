@@ -125,7 +125,6 @@ def load_application_data(user_id):
     except FileNotFoundError:
         return empty_application_data  # Return empty data if the file doesn't exist
 
-# handle application data
 # Handle application data
 @app.route('/application', methods=['GET', 'POST'])
 def application():
@@ -166,6 +165,37 @@ def application():
         # Save the merged data
         save_application_data(user_id, merged_data)
         return jsonify({"message": "Application data saved successfully"}), 200
+    
+
+    # Handle final application submission
+@app.route('/application_submit', methods=['POST'])
+def application_submit():
+    # Retrieve user_id and final application data from JSON body
+    user_id = request.json.get("user_id")
+    print("Received user_id in submission:", user_id)
+
+    if not user_id:
+        return jsonify({"error": "User ID is missing"}), 400
+
+    # Retrieve application data from the submission request
+    submission_data = request.json.get("application_data")
+    if not submission_data:
+        return jsonify({"error": "Application data is missing"}), 400
+
+    # Load any existing data
+    existing_data = load_application_data(user_id)
+
+    # Merge submission data with existing data
+    final_data = {**existing_data, **submission_data}
+
+    # Set the status to "Complete" and update the last edited date
+    final_data["status"] = "Complete"
+    formatted_date = datetime.now().strftime("%b. %-d, %Y")
+    final_data["last_edited"] = formatted_date
+
+    # Save the final application data
+    save_application_data(user_id, final_data)
+    return jsonify({"message": "Application submitted successfully"}), 200
 
 
 
