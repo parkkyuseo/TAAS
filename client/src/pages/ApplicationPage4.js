@@ -5,15 +5,34 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ApplicationContext } from "../context/ApplicationContext";
 import '../styles/application.css';
-import courseListData from "../data/courses.json";
 
 function ApplicationPage4() {
   const { selectedCourses, setSelectedCourses, loadApplicationData } = useContext(ApplicationContext);
   const maxCourses = 5; // Maximum number of courses to select
 
-  const courseList = courseListData || [];
+  const [courseList, setCourseList] = useState([]);
 
   const navigate = useNavigate();
+
+  // Fetch courses from the server
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/courses');
+        if (response.ok) {
+          const data = await response.json();
+          setCourseList(data);
+        } else {
+          console.error("Failed to fetch courses");
+        }
+      } catch (error) {
+        console.error("Error occurred while fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
 
   // Load data 
   useEffect(() => {

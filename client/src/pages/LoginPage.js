@@ -15,27 +15,38 @@ function LoginPage() {
 
   // Function to handle login and fetch JWT token
   const handleLogin = async () => {
-    const response = await fetch("http://127.0.0.1:5000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id, password }),
-    });
-    
-    const data = await response.json();
-
-    if (response.ok) {
-      setToken(data.access_token);  // Store the JWT token if login is successful
+    try {
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, password }),
+      });
+  
+      if (!response.ok) {
+        // Handle non-2xx HTTP responses
+        const errorData = await response.json();
+        setError(errorData.error || "Login failed.");
+        return;
+      }
+  
+      const data = await response.json();
+      
+      // Successful login
       setMessage("Logged in successfully");
-      // Store user_id and token in localStorage after login
-      localStorage.setItem("user_id", id); 
+      localStorage.setItem("user_id", id);
       localStorage.setItem("token", data.access_token);
-      navigate("/application-homepage"); 
-    } else {
-      setToken(null);
-      setMessage("");
-      setError("Incorrect Password or ID");
+      localStorage.setItem("user_role", data.role);
+      
+      if (data.role === "manager") {
+        navigate("/manager"); // Redirect to manager dashboard
+      } else if (data.role === "student") {
+        navigate("/application"); // Redirect to student application page
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An error occurred while connecting to the server.");
     }
   };
 

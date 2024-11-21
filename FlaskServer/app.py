@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 from flask_cors import CORS
 import json
 import os
+import glob
 from datetime import datetime
 
 # Create an instance of the Flask object
@@ -29,7 +30,8 @@ def index():
 # Example data: List of users
 users_data = [
     {"id": "student", "password": "student-thisismypassword"},
-    {"id": "student2", "password": "student-thisismypassword"}
+    {"id": "student2", "password": "student-thisismypassword"},
+    {"id": "manager", "password": "manager-thisismypassword"}
 ]
 
 subfolder_path = 'application_data'  # Subfolder to store user data
@@ -82,15 +84,21 @@ def login():
     # Print the incoming data to verify what's being sent from the frontend
     print(f"Incoming login data: ID={user_id}, Password={password}")
 
-    # Authenticate the user
+    # Manager authentication
+    if user_id == "manager" and password == "manager-thisismypassword":  
+        access_token = create_access_token(identity={"user_id": user_id, "role": "manager"})
+        return jsonify({"access_token": access_token, "role": "manager"}), 200
+
+    # Authenticate the user (students)
     user = next((user for user in users_data if user["id"] == user_id and user["password"] == password), None)
 
     if user:
         # Generate a JWT token
-        access_token = create_access_token(identity=user_id)
-        return jsonify({"access_token": access_token}), 200
-    else:
-        return jsonify({"error": "Invalid credentials"}), 401
+        access_token = create_access_token(identity={"user_id": user_id, "role": "student"})
+        return jsonify({"access_token": access_token, "role": "student"}), 200
+
+    # Invalid credentials
+    return jsonify({"error": "Invalid credentials"}), 401
 
 
 # A protected route that requires a valid JWT token
@@ -197,6 +205,92 @@ def application_submit():
     save_application_data(user_id, final_data)
     return jsonify({"message": "Application submitted successfully"}), 200
 
+
+@app.route('/courses', methods=['GET'])
+def get_courses():
+    try:
+        # Load courses from the JSON file
+        with open('data/courses.json', 'r') as file:
+            courses = json.load(file)
+        return jsonify(courses), 200
+    except FileNotFoundError:
+        return jsonify({"error": "Courses data not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/manager/students', methods=['GET', 'POST'])
+def manage_students():
+    if request.method == 'GET':
+        # Fetch all students' application data
+        student_files = glob.glob('application_data/*_application.json')
+        students_data = [json.load(open(f)) for f in student_files]
+        return jsonify(students_data), 200
+
+    elif request.method == 'POST':
+        # Update a student's application data
+        student_id = request.json.get("student_id")
+        updated_data = request.json.get("application_data")
+        save_application_data(student_id, updated_data)
+        return jsonify({"message": "Student data updated successfully"}), 200
+    
+
+@app.route('/manager/courses', methods=['GET', 'POST', 'DELETE'])
+def manage_courses():
+    if request.method == 'GET':
+        # Fetch all courses
+        with open('data/courses.json', 'r') as file:
+            courses = json.load(file)
+        return jsonify(courses), 200
+
+    elif request.method == 'POST':
+        # Add or update a course
+        new_course = request.json
+        with open('data/courses.json', 'r') as file:
+            courses = json.load(file)
+        courses.append(new_course)
+        with open('data/courses.json', 'w') as file:
+            json.dump(courses, file)
+        return jsonify({"message": "Course updated successfully"}), 200
+
+    elif request.method == 'DELETE':
+        # Delete a course
+        course_code = request.json.get("course_code")
+        with open('data/courses.json', 'r') as file:
+            courses = json.load(file)
+        courses = [course for course in courses if course["code"] != course_code]
+        with open('data/courses.json', 'w') as file:
+            json.dump(courses, file)
+        return jsonify({"message": "Course deleted successfully"}), 200
+
+
+@app.route('/manager/professors', methods=['GET', 'POST'])
+def manage_professors():
+    if request.method == 'GET':
+        with open('data/professors.json', 'r') as file:
+            professors = json.load(file)
+        return jsonify(professors), 200
+
+    elif request.method == 'POST':
+        updated_professor = request.json
+        with open('data/professors.json', 'r') as file:
+            professors = json.load(file)
+        professors.append(updated_professor)
+        with open('data/professors.json', 'w') as file:
+            json.dump(professors, file)
+        return jsonify({"message": "Professor updated successfully"}), 200
+    
+@app.route('/manager/dashboard', methods=['GET'])
+@jwt_required()
+def manager_dashboard():
+    """
+    Manager dashboard route, accessible only by managers.
+    """
+    current_user = get_jwt_identity()
+    if current_user["role"] != "manager":
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    return jsonify({"message": "Welcome to the manager dashboard!"}), 200
 
 
 if __name__=="__main__":

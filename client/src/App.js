@@ -46,6 +46,7 @@ import ApplicationPage2 from './pages/ApplicationPage2'
 import ApplicationPage3 from './pages/ApplicationPage3'
 import ApplicationPage4 from './pages/ApplicationPage4'
 import SubmissionPage from './pages/SubmissionPage'
+import ManagerPage from "./pages/ManagerPage";
 
 
 
@@ -62,6 +63,7 @@ function App() {
           <Route path="/application3" element={<ApplicationPage3 />} />  {/* Application page 3 */}
           <Route path="/application4" element={<ApplicationPage4 />} />  {/* Application page 4 */}
           <Route path="submission" element={<SubmissionPage />} />  {/* Submission page */}
+          <Route path="/manager" element={<ManagerPage />} /> {/* Manager Dashboard */}
         </Routes>
       </Router>
     </ApplicationProvider>

@@ -1,39 +1,27 @@
 {
     "status": "Complete",
-    "last_edited": "Nov. 5, 2024",
+    "last_edited": "Nov. 21, 2024",
     "admitted_semester": "Fall 2024",
     "college_status": "Graduate Masters",
-    "gpa": "3.0",
+    "gpa": "3.5",
     "ufid": "12345567",
     "country_of_origin": "korea",
     "test_scores": {
-        "speak_toefl": "55-60 Speak / 28-30 Toefl IBT"
+        "speak_toefl": "45-50 Speak / 23-27 Toefl IBT"
     },
     "eap_status": {
-        "eap_5836_status": "",
-        "eap_5837_status": ""
+        "eap_5836_status": "not taken",
+        "eap_5837_status": "not taken"
     },
-    "research_and_teaching_interests": "describe",
-    "travel_plan": "No plan",
+    "research_and_teaching_interests": "",
+    "travel_plan": "n/a",
     "course_preferences": [
         {
-            "course": "CAP 4773",
+            "course": "CDA 4630",
             "preference": "Highly Preferred"
         },
         {
-            "course": "CEN 3031",
-            "preference": "Highly Preferred"
-        },
-        {
-            "course": "COP 3275",
-            "preference": "Highly Preferred"
-        },
-        {
-            "course": "CEN 3913",
-            "preference": "Highly Preferred"
-        },
-        {
-            "course": "CGS 3065",
+            "course": "CEN 4721",
             "preference": "Highly Preferred"
         }
     ],
