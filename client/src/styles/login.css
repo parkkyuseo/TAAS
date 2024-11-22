@@ -2,11 +2,11 @@
 .login-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Make the page take full viewport height */
+  min-height: 100vh; 
 }
 
 .login-form {
-  flex: 1; /* Take remaining space between header and footer */
+  flex: 1; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,11 +18,10 @@
 .login-form button {
   margin: 10px 0; /* Adds spacing between input fields and button */
   padding: 10px;
-  width: 200px; /* Optional: Adjust width of input and button */
+  width: 200px; 
   font-size: 1rem;
 }
 
-/* Optional button styling */
 .login-form button {
   background-color: #3498db;
   color: white;
