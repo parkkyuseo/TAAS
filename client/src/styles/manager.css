@@ -1,4 +1,4 @@
-
+/* General Page Styling */
 html, body {
   margin: 0;
   padding: 0;
@@ -6,15 +6,16 @@ html, body {
 
 .manager-dashboard {
   padding: 0;
-  margin: 0; 
+  margin: 0;
 }
 
 .manager-content {
   max-width: 1200px;
-  margin: 20px auto; 
-  padding: 0 20px; 
+  margin: 20px auto;
+  padding: 0 20px;
 }
 
+/* Button Group Styling */
 .button-group {
   display: flex;
   gap: 10px;
@@ -31,10 +32,161 @@ html, body {
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  background-color: #f1f1f1;
+  background-color: #3498db;
   transition: background-color 0.3s;
 }
 
 .button-group button:hover {
-  background-color: #ddd;
+  background-color: #2980b9;
+}
+
+/* Styling for Cards */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.course-item {
+  margin-bottom: 10px;
+}
+
+.course-item p {
+  margin: 0;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.tab-content {
+  margin-top: 10px;
+}
+
+/* Accordion Styling */
+.tabs {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
+  margin: 20px 0;
+}
+
+.tab {
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.tab-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em;
+  background: #2980b9;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.tab-label:hover {
+  background: #21618c;
+}
+
+.tab-label::after {
+  content: "\276F"; /* Right arrow icon */
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transition: all 0.35s;
+}
+
+.tab-content {
+  max-height: 0;
+  padding: 0 1em;
+  color: #2c3e50;
+  background: white;
+  overflow: hidden;
+  transition: all 0.35s;
+}
+
+/* For open tabs */
+input:checked + .tab-label {
+  background: #21618c;
+}
+
+input:checked + .tab-label::after {
+  transform: rotate(90deg);
+}
+
+input:checked ~ .tab-content {
+  max-height: 500px;
+  padding: 1em;
+}
+
+/* Hide input elements */
+.tabs input {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.courses-table th,
+.courses-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.courses-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.courses-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.courses-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.professors-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+.professors-table th,
+.professors-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.professors-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.professors-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.professors-table tr:hover {
+  background-color: #f1f1f1;
 }

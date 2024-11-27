@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "../styles/manager.css";
 
 function ManageProfessors() {
   const [professors, setProfessors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch professors' data from the server
   useEffect(() => {
     const fetchProfessors = async () => {
       try {
@@ -12,35 +14,41 @@ function ManageProfessors() {
           const data = await response.json();
           setProfessors(data);
         } else {
-          console.error("Failed to fetch professors' data");
+          throw new Error("Failed to fetch professors");
         }
-      } catch (error) {
-        console.error("Error fetching professors:", error);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfessors();
   }, []);
 
+  if (loading) return <p>Loading Professors...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
   return (
     <div>
       <h2>Manage Professors</h2>
-      <table>
+      <table className="professors-table">
         <thead>
           <tr>
             <th>Name</th>
+            <th>Email</th>
             <th>Assigned Courses</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {professors.map((professor) => (
-            <tr key={professor.id}>
+          {professors.map((professor, index) => (
+            <tr key={index}>
               <td>{professor.name}</td>
-              <td>{professor.courses.join(", ")}</td>
+              <td>{professor.email}</td>
               <td>
-                <button>Edit</button>
-                <button>Delete</button>
+                {professor.assigned_courses.length > 0
+                  ? professor.assigned_courses.join(", ")
+                  : "None"}
               </td>
             </tr>
           ))}

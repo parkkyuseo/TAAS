@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header"; 
-import Footer from "../components/Footer"; 
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import ManageStudents from "./ManageStudents";
 import ManageCourses from "./ManageCourses";
 import ManageProfessors from "./ManageProfessors";
 import "../styles/manager.css";
 
 function ManagerPage() {
-  const [activeTab, setActiveTab] = useState("students");
+  const [activeTab, setActiveTab] = useState("");
   const [studentsData, setStudentsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,7 +39,7 @@ function ManagerPage() {
 
   return (
     <div className="manager-dashboard">
-      <Header subtitle="Manager Dashboard" /> {/* Shared Header */}
+      <Header subtitle="Manager Dashboard" />
       <main className="manager-content">
         <h1>Manager Dashboard</h1>
         <div className="button-group">
@@ -52,25 +52,24 @@ function ManagerPage() {
           <button
             className={activeTab === "courses" ? "active" : ""}
             onClick={() => setActiveTab("courses")}
-            disabled
           >
             Manage Courses
           </button>
           <button
             className={activeTab === "professors" ? "active" : ""}
             onClick={() => setActiveTab("professors")}
-            disabled
           >
             Manage Professors
           </button>
         </div>
 
-        {/* Conditionally render based on activeTab */}
+        {/* Conditional rendering */}
         {activeTab === "students" && <ManageStudents students={studentsData} />}
         {activeTab === "courses" && <ManageCourses />}
         {activeTab === "professors" && <ManageProfessors />}
+        {!activeTab && <p>Select a section to manage.</p>}
       </main>
-      <Footer /> {/* Shared Footer */}
+      <Footer />
     </div>
   );
 }

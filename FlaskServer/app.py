@@ -29,9 +29,11 @@ def index():
 
 # Example data: List of users
 users_data = [
-    {"id": "student", "password": "student-thisismypassword"},
-    {"id": "student2", "password": "student-thisismypassword"},
-    {"id": "manager", "password": "manager-thisismypassword"}
+    {"id": "student", "password": "student-thisismypassword", "name": "Lisa"},
+    {"id": "student2", "password": "student-thisismypassword", "name": "Bob"},
+    {"id": "manager", "password": "manager-thisismypassword", "name": "Manager"},
+    {"id": "professor", "password": "professor-thisismypassword", "name": "Professor1 Name"},
+    {"id": "professor2", "password": "professor-thisismypassword", "name": "Professor2 Name"}
 ]
 
 subfolder_path = 'application_data'  # Subfolder to store user data
@@ -158,6 +160,9 @@ def application():
         new_data = request.json.get("application_data")
         if not new_data:
             return jsonify({"error": "Application data is missing"}), 400
+        
+        user = next((u for u in users_data if u["id"] == user_id), {})
+        new_data["name"] = user.get("name", "Unknown")  # Add the name field
 
         # Load existing data
         existing_data = load_application_data(user_id)
@@ -219,12 +224,34 @@ def get_courses():
         return jsonify({"error": str(e)}), 500
 
 
+# @app.route('/manager/students', methods=['GET', 'POST'])
+# def manage_students():
+#     if request.method == 'GET':
+#         # Fetch all students' application data
+#         student_files = glob.glob('application_data/*_application.json')
+#         students_data = [json.load(open(f)) for f in student_files]
+#         return jsonify(students_data), 200
+
+#     elif request.method == 'POST':
+#         # Update a student's application data
+#         student_id = request.json.get("student_id")
+#         updated_data = request.json.get("application_data")
+#         save_application_data(student_id, updated_data)
+#         return jsonify({"message": "Student data updated successfully"}), 200
+    
 @app.route('/manager/students', methods=['GET', 'POST'])
 def manage_students():
     if request.method == 'GET':
         # Fetch all students' application data
         student_files = glob.glob('application_data/*_application.json')
-        students_data = [json.load(open(f)) for f in student_files]
+        students_data = []
+
+        for file in student_files:
+            with open(file) as f:
+                student_data = json.load(f)
+                student_id = student_data.get("ufid")  # Assuming UFID matches user ID
+                students_data.append(student_data)
+
         return jsonify(students_data), 200
 
     elif request.method == 'POST':
@@ -233,7 +260,7 @@ def manage_students():
         updated_data = request.json.get("application_data")
         save_application_data(student_id, updated_data)
         return jsonify({"message": "Student data updated successfully"}), 200
-    
+
 
 @app.route('/manager/courses', methods=['GET', 'POST', 'DELETE'])
 def manage_courses():
@@ -264,21 +291,24 @@ def manage_courses():
         return jsonify({"message": "Course deleted successfully"}), 200
 
 
-@app.route('/manager/professors', methods=['GET', 'POST'])
+@app.route('/professors', methods=['GET', 'POST'])
 def manage_professors():
-    if request.method == 'GET':
-        with open('data/professors.json', 'r') as file:
-            professors = json.load(file)
-        return jsonify(professors), 200
+    try:
+        if request.method == 'GET':
+            with open('data/professors.json', 'r') as file:
+                professors = json.load(file)
+            return jsonify(professors), 200
 
-    elif request.method == 'POST':
-        updated_professor = request.json
-        with open('data/professors.json', 'r') as file:
-            professors = json.load(file)
-        professors.append(updated_professor)
-        with open('data/professors.json', 'w') as file:
-            json.dump(professors, file)
-        return jsonify({"message": "Professor updated successfully"}), 200
+        elif request.method == 'POST':
+            # Updating professor information
+            updated_data = request.json.get("professors")
+            with open('data/professors.json', 'w') as file:
+                json.dump(updated_data, file, indent=2)
+            return jsonify({"message": "Professors updated successfully"}), 200
+    except FileNotFoundError:
+        return jsonify({"error": "Professors data not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
 @app.route('/manager/dashboard', methods=['GET'])
 @jwt_required()

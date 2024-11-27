@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import "../styles/manager.css";
 
 function ManageCourses() {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch courses' data from the server
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -12,38 +14,38 @@ function ManageCourses() {
           const data = await response.json();
           setCourses(data);
         } else {
-          console.error("Failed to fetch courses' data");
+          throw new Error("Failed to fetch courses");
         }
-      } catch (error) {
-        console.error("Error fetching courses:", error);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCourses();
   }, []);
 
+  if (loading) return <p>Loading Courses...</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
   return (
     <div>
       <h2>Manage Courses</h2>
-      <table>
+      <table className="courses-table">
         <thead>
           <tr>
             <th>Course Code</th>
             <th>Course Title</th>
-            <th>Professor(s)</th>
-            <th>Actions</th>
+            <th>Assigned Professor</th>
           </tr>
         </thead>
         <tbody>
-          {courses.map((course) => (
-            <tr key={course.code}>
+          {courses.map((course, index) => (
+            <tr key={index}>
               <td>{course.code}</td>
               <td>{course.title}</td>
-              <td>{course.professors.join(", ")}</td>
-              <td>
-                <button>Edit</button>
-                <button>Delete</button>
-              </td>
+              <td>{course.assigned_Prof || "None"}</td>
             </tr>
           ))}
         </tbody>

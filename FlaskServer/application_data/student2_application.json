@@ -1,0 +1,34 @@
+{
+    "status": "Incomplete",
+    "last_edited": "Nov. 26, 2024",
+    "admitted_semester": "Fall 2024",
+    "college_status": "Undergraduate Junior",
+    "gpa": "3.7",
+    "ufid": "12345677",
+    "country_of_origin": "usa",
+    "test_scores": {
+        "speak_toefl": "n/a"
+    },
+    "eap_status": {
+        "eap_5836_status": "",
+        "eap_5837_status": ""
+    },
+    "research_and_teaching_interests": "Interested in DB",
+    "travel_plan": "n/a",
+    "course_preferences": [
+        {
+            "course": "CAP 4773",
+            "preference": "Somewhat Preferred"
+        },
+        {
+            "course": "CIS 4930",
+            "preference": "Neither Preferred nor Undesired"
+        },
+        {
+            "course": "COT 3100",
+            "preference": "Undesired but Acceptable"
+        }
+    ],
+    "last_page": "application4",
+    "name": "Bob"
+}
