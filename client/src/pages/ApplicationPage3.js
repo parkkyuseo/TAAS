@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import '../styles/application.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { ApplicationContext } from '../context/ApplicationContext'; // Import the context
+import { ApplicationContext } from '../context/ApplicationContext';
 
 function ApplicationPage3() {
   const {
@@ -12,17 +12,31 @@ function ApplicationPage3() {
     travelPlan,
     setTravelPlan,
     loadApplicationData
-  } = useContext(ApplicationContext); 
+  } = useContext(ApplicationContext);
 
   const navigate = useNavigate();
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  // Load data 
+  // Load data
   useEffect(() => {
     const user_id = localStorage.getItem("user_id");
     if (user_id) {
       loadApplicationData(user_id);
     }
-  }, []);  
+  }, []);
+
+  // Validate form fields
+  useEffect(() => {
+    const validateFields = () => {
+      if (researchAndTeachingInterests.trim() && travelPlan.trim()) {
+        setIsFormValid(true);
+      } else {
+        setIsFormValid(false);
+      }
+    };
+
+    validateFields();
+  }, [researchAndTeachingInterests, travelPlan]);
 
   // Function to handle saving the data when clicking the "Next" button
   const handleNext = async () => {
@@ -69,7 +83,7 @@ function ApplicationPage3() {
           ></textarea>
         </div>
         <p></p>
-        
+
         <div>
           <label htmlFor="travelPlan">Travel Plan</label>
           <textarea
@@ -83,21 +97,25 @@ function ApplicationPage3() {
         <p></p>
 
         <Link to="/application2">
-          <button type="button">Previous</button> {/* Button to navigate to the previous application page */}
+          <button type="button">Previous</button>
         </Link>
-        
-        <button type="button" onClick={handleNext}>Next</button> {/* Save and navigate to the next page */}
+
+        <button type="button" onClick={handleNext} disabled={!isFormValid}>
+          Next
+        </button>
 
         <h3> Progress </h3>
         <div className="progressbar">
-          <div style={{
-            height: "30px",
-            width: "60%",  // Adjust percentage to indicate progress
-            backgroundColor: "#2ecc71"
-          }}> </div>
+          <div
+            style={{
+              height: "30px",
+              width: "60%",
+              backgroundColor: "#2ecc71"
+            }}
+          ></div>
         </div>
-        
-        <div> 60% </div>
+
+        <div>60%</div>
       </form>
       <Footer />
     </div>

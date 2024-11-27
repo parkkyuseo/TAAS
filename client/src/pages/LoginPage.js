@@ -42,7 +42,7 @@ function LoginPage() {
       if (data.role === "manager") {
         navigate("/manager"); // Redirect to manager dashboard
       } else if (data.role === "student") {
-        navigate("/application"); // Redirect to student application page
+        navigate("/application-homepage"); // Redirect to student application homepage
       }
     } catch (error) {
       console.error("Login error:", error);

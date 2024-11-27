@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ApplicationContext } from '../context/ApplicationContext';
 import '../styles/application.css';
@@ -19,7 +19,9 @@ function ApplicationPage2() {
     setEap5837Status,
     loadApplicationData
   } = useContext(ApplicationContext);
+  
   const navigate = useNavigate();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   // Load data 
   useEffect(() => {
@@ -28,6 +30,24 @@ function ApplicationPage2() {
       loadApplicationData(user_id);
     }
   }, []);  
+
+  // Validate the form fields
+  useEffect(() => {
+    const validateFields = () => {
+      if (
+        countryOfOrigin &&
+        collegeStatus &&
+        (countryOfOrigin.toLowerCase() === "usa" || (speakScore && speakScore !== "n/a")) &&
+        (collegeStatus !== "Graduate Ph.D." || (eap5836Status && eap5837Status))
+      ) {
+        setIsFormValid(true);
+      } else {
+        setIsFormValid(false);
+      }
+    };
+
+    validateFields();
+  }, [countryOfOrigin, collegeStatus, speakScore, eap5836Status, eap5837Status]);
 
   // Function to handle saving the data when clicking the "Next" button
   const handleNext = async () => {
@@ -67,11 +87,9 @@ function ApplicationPage2() {
 
   return (
     <div>
-      <Header subtitle="Application" />  {/* Header component included here */}
+      <Header subtitle="Application" />
       <h1>TA Application Form</h1>
-      {/* contents of the application */}
       <form className="application-form">
-
         <div>
           <label htmlFor="countryOfOrigin">Country of Origin</label>
           <input
@@ -135,25 +153,26 @@ function ApplicationPage2() {
         <p></p>
 
         <Link to="/application">
-          <button type="button">Previous</button>  {/* Button to navigate to the previous application page */}
+          <button type="button">Previous</button>
         </Link>
         
-        <button type="button" onClick={handleNext}>Next</button>  {/* Save and navigate to next page */}
-        
+        <button type="button" onClick={handleNext} disabled={!isFormValid}>
+          Next
+        </button>
+
         <h3> Progress </h3>
-        
         <div className="progressbar">
-          <div style={{
-            height: "30px",
-            width: "30%",
-            backgroundColor: "#2ecc71"
-          }}> </div>
+          <div
+            style={{
+              height: "30px",
+              width: "30%",
+              backgroundColor: "#2ecc71"
+            }}
+          ></div>
         </div>
-
-        <div> 30% </div>
-
+        <div>30%</div>
       </form>
-      <Footer />  {/* Footer component included here */}
+      <Footer />
     </div>
   );
 }
