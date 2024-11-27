@@ -26,4 +26,10 @@ function WelcomePage() {
     );
 }
 
+// Pictogram:
+// <a href="https://www.flaticon.com/kr/free-icons/" title="교훈 아이콘">교훈 아이콘 제작자: Freepik - Flaticon</a>
+// <a href="https://www.flaticon.com/kr/free-icons/-" title="숙제 도움 아이콘">숙제 도움 아이콘 제작자: bsd - Flaticon</a>
+// <a href="https://www.flaticon.com/kr/free-icons/" title="로그아웃 아이콘">로그아웃 아이콘 제작자: Ali Coskun - Flaticon</a>
+
+
 export default WelcomePage;

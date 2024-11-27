@@ -8,11 +8,10 @@ import ManageProfessors from "./ManageProfessors";
 import "../styles/manager.css";
 
 function ManagerPage() {
-  const [activeTab, setActiveTab] = useState("");
+  const [activeSection, setActiveSection] = useState(null); // Track the active section
   const [studentsData, setStudentsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,37 +40,60 @@ function ManagerPage() {
     <div className="manager-dashboard">
       <Header subtitle="Manager Dashboard" />
       <main className="manager-content">
-        <h1>Manager Dashboard</h1>
         <div className="button-group">
-          <button
-            className={activeTab === "students" ? "active" : ""}
-            onClick={() => setActiveTab("students")}
+          <figure
+            className="figure-button"
+            onClick={() => setActiveSection("students")}
           >
-            Manage Students
-          </button>
-          <button
-            className={activeTab === "courses" ? "active" : ""}
-            onClick={() => setActiveTab("courses")}
+            <img
+              src="images/student.png"
+              alt="Manage Students"
+              className="figure-icon"
+            />
+            <figcaption className="figure-caption">Manage Students</figcaption>
+          </figure>
+
+          <figure
+            className="figure-button"
+            onClick={() => setActiveSection("courses")}
           >
-            Manage Courses
-          </button>
-          <button
-            className={activeTab === "professors" ? "active" : ""}
-            onClick={() => setActiveTab("professors")}
+            <img
+              src="images/books.png"
+              alt="Manage Courses"
+              className="figure-icon"
+            />
+            <figcaption className="figure-caption">Manage Courses</figcaption>
+          </figure>
+
+          <figure
+            className="figure-button"
+            onClick={() => setActiveSection("professors")}
           >
-            Manage Professors
-          </button>
+            <img
+              src="images/school.png"
+              alt="Manage Professors"
+              className="figure-icon"
+            />
+            <figcaption className="figure-caption">Manage Professors</figcaption>
+          </figure>
         </div>
 
-        {/* Conditional rendering */}
-        {activeTab === "students" && <ManageStudents students={studentsData} />}
-        {activeTab === "courses" && <ManageCourses />}
-        {activeTab === "professors" && <ManageProfessors />}
-        {!activeTab && <p>Select a section to manage.</p>}
+        {/* Conditional rendering for active section */}
+        <div className="manager-details">
+          {activeSection === "students" && <ManageStudents students={studentsData} />}
+          {activeSection === "courses" && <ManageCourses />}
+          {activeSection === "professors" && <ManageProfessors />}
+          {!activeSection && <p>Select a section to manage.</p>}
+        </div>
       </main>
       <Footer />
     </div>
   );
 }
 
+// Pictogram: 
+// <a href="https://www.flaticon.com/free-icons/teacher" title="teacher icons">Teacher icons created by Park Jisun - Flaticon</a>
+// <a href="https://www.flaticon.com/free-icons/student" title="student icons">Student icons created by Tempo_doloe - Flaticon</a>
+// <a href="https://www.flaticon.com/free-icons/student" title="student icons">Student icons created by Defamiravi Studio - Flaticon</a>
+// <a href="https://www.flaticon.com/free-icons/student" title="student icons">Student icons created by Freepik - Flaticon</a>
 export default ManagerPage;
