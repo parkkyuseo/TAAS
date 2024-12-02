@@ -1,8 +1,19 @@
-// src/components/Header.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/header.css'; 
 
-function Header({subtitle}) {
+function Header({ subtitle }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_role"); 
+    
+    // Redirect to the welcome page
+    navigate("/");
+  };
+
   return (
     <header className="header">
       <div className="header-column logo-column">
@@ -17,9 +28,9 @@ function Header({subtitle}) {
         </div>
       </div>
       <div className="header-column logo-column">
-        <a href="link-2">
-          <img src="images/exit.png" alt="Logo 2" className="logo" />
-        </a>
+        <button onClick={handleLogout} className="logout-button">
+          <img src="images/exit.png" alt="Logout" className="logo" />
+        </button>
       </div>
     </header>
   );
